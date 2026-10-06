@@ -2,8 +2,8 @@
     let scores = [];
 
     // Get HTML elements
-    const scoreInput = document.getElementById("scoreInput");
-    const addBtn = document.getElementById("addBtn");
+    const scoreInput =document.getElementById("scoreInput") ;
+    const addBtn = document.getElementById("addBtn") ;
     const clearBtn = document.getElementById("clearBtn");
     const scoreList = document.getElementById("scoreList");
     const testCount = document.getElementById("testCount");
@@ -32,19 +32,22 @@
       // YOUR CODE HERE
      let score = Number(scoreInput.value)
 
-    if(!score){
+     if(!score){
         alert("Please Enter Score")
-    }
-    else if(score < 0 || score > 100){
+        return;
+     }
+      if(score < 0 || score > 100){
         alert("Score must be between 0-100")
-    }
-    else{
-        scores.push(score)
-        scoreInput.value = ""
-    }
+        return
+      }
+  
+      scores.push(score)
 
-    updateResults()
     
+      console.log(scores)
+      scoreInput.value = ""
+
+      updateResults()
     }
 
     // ============================================
@@ -59,9 +62,11 @@
     
     function clearAllScores() {
       // YOUR CODE HERE
-    scores = [];
-    scoreInput.value = "";
-    updateResults()
+        scores = []
+        scoreInput.value = ""
+        gradeDisplay.innerHTML = "--"
+        starDisplay.innerHTML= "--"
+        updateResults()
    
     }
 
@@ -112,63 +117,70 @@
     function updateResults() {
       // YOUR CODE HERE
 
-      scoreList.innerHTML = ""
-    // Creating the scores list / div 
-     scores.forEach(function(score, index){
-        const list = document.createElement("li")
-        list.innerHTML = `${index+1}. ${score}`
-        list.style.listStyle = "none"
-        scoreList.appendChild(list)
-     })
-  
-     // Statistics 
-     if(scores.length === 0){
-        testCount.textContent = "No scores yet..."
-        bestScore.textContent = "--"
-        average.textContent = "--"
-        lowestScore.textContent = "--"
-     } else{
+      // empty score list
+        scoreList.innerHTML = ""
 
-        // testCount render 
-    testCount.innerHTML = `${scores.length}`
-    // calculate the average using reduce to get the total
-        scores.reduce(function(score, sum){
-            return sum+=score
-        })/scores.length // Divide the total by the number of items in the array
+        scores.forEach(function(score, index){
+            const list = document.createElement("li")
+            list.innerHTML = `${index + 1}. ${score}`
+            scoreList.appendChild(list)
+        })
 
-    // Get the best score 
-     let sortedDescending = scores.sort(function(a,b){
-        return b-a
-     })
+        if(scores.length === 0){
+            testCount.textContent ="No scores yet..."
+            bestScore.textContent = "--"
+            average.textContent = "--"
+            lowestScore.textContent = "--"
 
+        }else{
+            //number of scores
+            testCount.textContent = `${scores.length}`
+            // average of the scores 
+            let scoreAverage = scores.reduce(function(score, sum){
+                return sum += score
+            }, 0)/scores.length
+
+        average.textContent = `${scoreAverage.toFixed(0)}`
+                 
      // Highest Score
-     bestScore.innerHTML = `${sortedDescending[0]}`
+let sortedDescending = scores.sort(function(a,b){
+    return b-a
+})
 
+
+bestScore.textContent = `${sortedDescending[0]}`
      // Lowest score 
-     lowestScore.innerHTML = `${sortedDescending[sortedDescending.length-1]}`
+
+lowestScore.textContent = `${sortedDescending[sortedDescending.length - 1]}`
 
 
-     if(average >= 90){
-        gradeDisplay.innerHTML = "GRADE A"
-        starDisplay.innerHTML = "⭐⭐⭐⭐⭐"
-     } else if(average >= 80){
-         gradeDisplay.innerHTML = "GRADE B"
-        starDisplay.innerHTML = "⭐⭐⭐⭐"
-     } else if(average >= 70){
-         gradeDisplay.innerHTML = "GRADE C"
-        starDisplay.innerHTML = "⭐⭐⭐"
-     }else if(average >= 60){
-         gradeDisplay.innerHTML = "GRADE D"
-        starDisplay.innerHTML = "⭐⭐"
-     } else {
-         gradeDisplay.innerHTML = "F"
-        starDisplay.innerHTML = "⭐"
-     }
+if(scoreAverage >= 90){
+    gradeDisplay.innerHTML = "GRADE A"
+    starDisplay.innerHTML = "⭐⭐⭐⭐⭐"
+} else if(scoreAverage  >=80){
+     gradeDisplay.innerHTML = "GRADE B"
+    starDisplay.innerHTML = "⭐⭐⭐⭐"
+}else if(scoreAverage >= 70){
+     gradeDisplay.innerHTML = "GRADE c"
+    starDisplay.innerHTML = "⭐⭐⭐"
+}else if(scoreAverage>=60){
+     gradeDisplay.innerHTML = "GRADE D"
+    starDisplay.innerHTML = "⭐⭐"
+} else{
+     gradeDisplay.innerHTML = "GRADE F"
+    starDisplay.innerHTML = "⭐"
+}
 
+        }
+
+
+
+
+     
     }
-    }
-
+    
     // Add event listeners
-    addBtn.addEventListener("click", addScore);
-    clearBtn.addEventListener("click", clearAllScores);
+
+addBtn.addEventListener("click", addScore)
+clearBtn.addEventListener("click", clearAllScores)
 
